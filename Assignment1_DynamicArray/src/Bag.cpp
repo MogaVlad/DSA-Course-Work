@@ -4,8 +4,6 @@
 #include <iostream>
 using namespace std;
 
-/// p = positionsSize, u = elementsSize
-
 /// BC - Θ(1)
 /// WC - Θ(1)
 /// TC - Θ(1)
@@ -20,8 +18,8 @@ Bag::Bag() {
 }
 
 /// BC - Θ(1) - no resize needed, element already exists, and it is found on the first position
-/// WC - Θ(p) - positions resize needed
-/// TC - O(p)
+/// WC - Θ(positionsSize) - positions resize needed
+/// TC - O(positionsSize)
 void Bag::add(TElem elem) {
 	if (this -> elementsCapacity == this -> elementsSize) {
 		this -> elementsCapacity = this -> elementsCapacity * 2;
@@ -62,9 +60,9 @@ void Bag::add(TElem elem) {
 	}
 }
 
-/// BC - Θ(p) - always parses the whole positions array
-/// WC - Θ(p) - parses the whole positions array, and the removed element appears only once, so it has to fix the displaced indexes
-/// TC - Θ(p)
+/// BC - Θ(positionsSize) - always parses the whole positions array
+/// WC - Θ(positionsSize) - parses the whole positions array, and the removed element appears only once, so it has to fix the displaced indexes
+/// TC - Θ(positionsSize)
 bool Bag::remove(TElem elem) {
 	int occurrenceCount = 0, positionIndex = -1;
 
@@ -96,8 +94,8 @@ bool Bag::remove(TElem elem) {
 }
 
 /// BC - Θ(1) - element found on the first position
-/// WC - Θ(u) - element not found in the unique elements array
-/// TC - O(u)
+/// WC - Θ(elementsSize) - element not found in the unique elements array
+/// TC - O(elementsSize)
 bool Bag::search(TElem elem) const {
 	for (int i = 0; i < this -> elementsSize; i++)
 		if (this -> elements[i] == elem)
@@ -105,9 +103,9 @@ bool Bag::search(TElem elem) const {
 	return false;
 }
 
-/// BC - Θ(p) - always parses the whole positions array
-/// WC - Θ(p)
-/// TC - Θ(p)
+/// BC - Θ(positionsSize) - always parses the whole positions array
+/// WC - Θ(positionsSize)
+/// TC - Θ(positionsSize)
 int Bag::nrOccurrences(TElem elem) const {
 	int count = 0;
 	for (int i = 0; i < this -> positionsSize; i++)
@@ -145,9 +143,9 @@ Bag::~Bag() {
 	delete [] this -> positions;
 }
 
-/// BC - Θ(p) - always parses both the unique elements array and positions array (p >= u always)
-/// WC - Θ(p)
-/// TC - Θ(p)
+/// BC - Θ(positionsSize) - always parses both the unique elements array and positions array (positionsSize >= elementsSize always)
+/// WC - Θ(positionsSize)
+/// TC - Θ(positionsSize)
 Bag::Bag(const Bag& other) {
 	this -> elementsCapacity = other.elementsCapacity;
 	this -> elementsSize = other.elementsSize;
@@ -163,8 +161,8 @@ Bag::Bag(const Bag& other) {
 }
 
 /// BC - Θ(1) - self assignment
-/// WC - Θ(p) - not a self assignment, has to parse both the unique elements array and positions array (p >= u always)
-/// TC - O(p)
+/// WC - Θ(positionsSize) - not a self assignment, has to parse both the unique elements array and positions array (p >= u always)
+/// TC - O(positionsSize)
 Bag& Bag::operator=(const Bag& other) {
 	if (this == &other)
 		return *this;
