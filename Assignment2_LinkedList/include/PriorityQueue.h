@@ -13,7 +13,18 @@ typedef bool (*Relation)(TPriority p1, TPriority p2);
 
 class PriorityQueue {
 private:
-	//TODO - Representation
+	struct DLLNode {
+		Element data = NULL_TELEM;
+		DLLNode* next = nullptr;
+		DLLNode* prev = nullptr;
+	};
+
+	struct DLL {
+		DLLNode* head = nullptr;
+		DLLNode* tail = nullptr;
+	} dll;
+
+	Relation relation;
 
 public:
 	//implicit constructor
