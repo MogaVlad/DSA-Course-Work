@@ -46,5 +46,4 @@ public:
 
 	//destructor
 	~PriorityQueue();
-
 };

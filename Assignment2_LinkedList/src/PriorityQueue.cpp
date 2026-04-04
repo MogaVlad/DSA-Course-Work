@@ -80,5 +80,4 @@ PriorityQueue::~PriorityQueue() {
 		delete current;
 		current = nextNode;
 	}
-};
-
+}
