@@ -4,9 +4,7 @@
 #include <iostream>
 using namespace std;
 
-/// BC - Θ(1)
-/// WC - Θ(1)
-/// TC - Θ(1)
+/// BC = WC = TC: Θ(1)
 Bag::Bag() {
 	this -> elementsCapacity = 10;
 	this -> elementsSize = 0;
@@ -114,30 +112,22 @@ int Bag::nrOccurrences(TElem elem) const {
 	return count;
 }
 
-/// BC - Θ(1)
-/// WC - Θ(1)
-/// TC - Θ(1)
+/// BC = WC = TC: Θ(1)
 int Bag::size() const {
 	return this -> positionsSize;
 }
 
-/// BC - Θ(1)
-/// WC - Θ(1)
-/// TC - Θ(1)
+/// BC = WC = TC: Θ(1)
 bool Bag::isEmpty() const {
 	return this -> positionsSize == 0;
 }
 
-/// BC - Θ(1) - always calls a Θ(1) function
-/// WC - Θ(1)
-/// TC - Θ(1)
+/// BC = WC = TC: Θ(1)
 BagIterator Bag::iterator() const {
 	return BagIterator(*this);
 }
 
-/// BC - Θ(1)
-/// WC - Θ(1)
-/// TC - Θ(1)
+/// BC = WC = TC: Θ(1)
 Bag::~Bag() {
 	delete [] this -> elements;
 	delete [] this -> positions;
