@@ -4,13 +4,29 @@
 typedef int TElem;
 #define NULL_TELEM 0
 
+struct BSTNode {
+	int line;
+	int col;
+	TElem value;
+	BSTNode* left;
+	BSTNode* right;
+};
+
 class Matrix {
 
 private:
-	//TODO - Representation
+	BSTNode* root;
+	int nrLin;
+	int nrCol;
+
+	void destroyTree(BSTNode* node);
+
 public:
 	//constructor
 	Matrix(int nrLines, int nrCols);
+
+	//destructor
+	~Matrix();
 
 	//returns the number of lines
 	int nrLines() const;
