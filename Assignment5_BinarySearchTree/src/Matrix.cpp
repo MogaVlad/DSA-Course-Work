@@ -7,6 +7,7 @@ using namespace std;
 Matrix::Matrix(int nrLines, int nrCols) {
 	if (nrLines <= 0 || nrCols <= 0)
 		throw exception();
+
 	this->nrLin = nrLines;
 	this->nrCol = nrCols;
 	this->root = nullptr;
@@ -15,7 +16,8 @@ Matrix::Matrix(int nrLines, int nrCols) {
 
 // BC = WC = TC: Θ(n), where n is the number of non-zero elements stored in the BST
 void Matrix::destroyTree(BSTNode* node) {
-	if (node == nullptr) return;
+	if (node == nullptr)
+		return;
 	destroyTree(node->left);
 	destroyTree(node->right);
 	delete node;
@@ -56,46 +58,64 @@ TElem Matrix::element(int i, int j) const {
 		else
 			return current->value;
 	}
+
 	return NULL_TELEM;
 }
 
 
-// BC: Θ(1) - the position is at the root or position is invalid
+// BC: Θ(1) - the position is invalid, or the position is at the root and e != NULL_TELEM
 // WC: Θ(n) - the position is on the longest path in a degenerate BST (all nodes form a chain)
 // TC: O(n), where n is the number of non-zero elements stored in the BST
 TElem Matrix::modify(int i, int j, TElem e) {
 	if (i < 0 || i >= nrLin || j < 0 || j >= nrCol)
 		throw exception();
 
-	BSTNode** current = &root;
-	while (*current != nullptr) {
-		BSTNode* node = *current;
-		if (i < node->line || (i == node->line && j < node->col)) {
-			current = &(node->left);
-		} else if (i > node->line || (i == node->line && j > node->col)) {
-			current = &(node->right);
-		} else {
-			TElem old = node->value;
+	BSTNode* current = root;
+	BSTNode* parent = nullptr;
+	while (current != nullptr) {
+		if (i < current->line || (i == current->line && j < current->col)) {
+			parent = current;
+			current = current->left;
+		}
+		else if (i > current->line || (i == current->line && j > current->col)) {
+			parent = current;
+			current = current->right;
+		}
+		else {
+			TElem old = current->value;
 			if (e != NULL_TELEM) {
-				node->value = e;
-			} else {
-				if (node->left == nullptr) {
-					*current = node->right;
-					delete node;
-				} else if (node->right == nullptr) {
-					*current = node->left;
-					delete node;
-				} else {
-					BSTNode** successor = &(node->right);
-					while ((*successor)->left != nullptr)
-						successor = &((*successor)->left);
-					node->line = (*successor)->line;
-					node->col = (*successor)->col;
-					node->value = (*successor)->value;
-					BSTNode* succNode = *successor;
-					*successor = succNode->right;
-					delete succNode;
+				current->value = e;
+			} else { // e == NULL_TELEM - we have to eliminate the current element
+				BSTNode* replacement;
+				if (current->left == nullptr) // no child on the left, or current is a leaf
+					replacement = current->right;
+				else if (current->right == nullptr) // no child on the right
+					replacement = current->left;
+				else {
+					BSTNode* succParent = current;
+					BSTNode* successor = current->right;
+					while (successor->left != nullptr) {
+						succParent = successor;
+						successor = successor->left;
+					}
+					current->line = successor->line;
+					current->col = successor->col;
+					current->value = successor->value;
+					if (succParent == current)
+						succParent->right = successor->right;
+					else
+						succParent->left = successor->right;
+					delete successor;
+					return old;
 				}
+
+				if (parent == nullptr) // current == root
+					root = replacement;
+				else if (parent->left == current)
+					parent->left = replacement;
+				else
+					parent->right = replacement;
+				delete current;
 			}
 			return old;
 		}
@@ -108,7 +128,12 @@ TElem Matrix::modify(int i, int j, TElem e) {
 		newNode->value = e;
 		newNode->left = nullptr;
 		newNode->right = nullptr;
-		*current = newNode;
+		if (parent == nullptr) // root == nullptr
+			root = newNode;
+		else if (i < parent->line || (i == parent->line && j < parent->col))
+			parent->left = newNode;
+		else
+			parent->right = newNode;
 	}
 	return NULL_TELEM;
 }
